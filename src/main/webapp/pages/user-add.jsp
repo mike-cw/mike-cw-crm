@@ -65,10 +65,10 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 		<!-- 页面头部 /-->
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -89,7 +89,7 @@
 			</section>
 			<!-- 内容头部 /-->
 
-			<form action="${pageContext.request.contextPath}/user/save.do"
+			<form action="${pageContext.request.contextPath}/register"
 				method="post">
 				<!-- 正文区域 -->
 				<section class="content"> <!--产品信息-->

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -69,11 +69,11 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 		<!-- 页面头部 /-->
 
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -113,7 +113,7 @@
 							</div>
 							<input type="text" class="form-control pull-right"
 								id="datepicker-a3" readonly="readonly"
-								value="${orders.orderTimeStr}">
+								value="${orders.orderTime}">
 						</div>
 					</div>
 					<div class="col-md-2 title">路线名称</div>
@@ -135,7 +135,7 @@
 								<i class="fa fa-calendar"></i>
 							</div>
 							<input type="text" class="form-control pull-right"
-								id="datepicker-a6" value="${orders.product.departureTimeStr}"
+								id="datepicker-a6" value="${orders.product.departureTime}"
 								readonly="readonly">
 						</div>
 					</div>
@@ -161,6 +161,7 @@
 				<table id="dataList"
 					class="table table-bordered table-striped table-hover dataTable">
 					<thead>
+
 						<tr>
 							<th class="">人群</th>
 							<th class="">姓名</th>
@@ -171,18 +172,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="traveller" items="${orders.travellers}">
-
+						<c:forEach items="${orders.traList}" var="traveller">
 							<tr>
-								<td>${traveller.travellerTypeStr}</td>
+								<td>${traveller.travellerType}</td>
 								<td><input type="text" size="10" value="${traveller.name }"
 									readonly="readonly"></td>
 								<td><input type="text" size="10" value="${traveller.sex }"
 									readonly="readonly"></td>
 								<td><input type="text" size="20"
 									value="${traveller.phoneNum }" readonly="readonly"></td>
-								<td><input type="text" size="15"
-									value="${traveller.credentialsTypeStr}" readonly="readonly"></td>
+								<c:if test="${traveller.credentialsType == 0}">
+									<td><input type="text" size="15"
+											   value="身份证" readonly="readonly"></td>
+								</c:if>
+								<c:if test="${traveller.credentialsType == 1}">
+									<td><input type="text" size="15"
+											   value="护照" readonly="readonly"></td>
+								</c:if>
+								<c:if test="${traveller.credentialsType == 2}">
+									<td><input type="text" size="15"
+											   value="军官证" readonly="readonly"></td>
+								</c:if>
 								<td><input type="text" size="28"
 									value="${traveller.credentialsNum }" readonly="readonly"></td>
 							</tr>
@@ -199,7 +209,7 @@
 				<div class="row data-type">
 
 					<div class="col-md-2 title">会员</div>
-					<div class="col-md-4 data text">${orders.member.nickname }</div>
+					<div class="col-md-4 data text">${orders.member.nickName }</div>
 
 					<div class="col-md-2 title">联系人</div>
 					<div class="col-md-4 data text">${orders.member.name}</div>
@@ -218,8 +228,12 @@
 					<div class="row data-type">
 
 						<div class="col-md-2 title">支付方式</div>
-						<div class="col-md-4 data text">在线支付-${orders.payTypeStr}</div>
-
+						<c:if test="${orders.payType == 1}">
+							<div class="col-md-4 data text">在线支付-微信</div>
+						</c:if>
+						<c:if test="${orders.payType == 0}">
+							<div class="col-md-4 data text">在线支付-支付宝</div>
+						</c:if>
 						<div class="col-md-2 title">金额</div>
 						<div class="col-md-4 data text">￥${orders.product.productPrice}</div>
 

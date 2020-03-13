@@ -129,11 +129,11 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 			<!-- 页面头部 /-->
 
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -158,7 +158,7 @@
 	</div>
 
 	<script
-		src="${pageContext.request.contextPath}/plugins/jQuery/jquery-2.2.3.min.js"></script>
+		src="${pageContext.request.contextPath}/plugins/jQuery/jquery.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/jQueryUI/jquery-ui.min.js"></script>
 	<script>
@@ -239,7 +239,7 @@
 	<script
 		src="${pageContext.request.contextPath}/plugins/ionslider/ion.rangeSlider.min.js"></script>
 	<script
-		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
+		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider(1).js"></script>
 	<script>
 		$(document).ready(function() {
 			// 选择框

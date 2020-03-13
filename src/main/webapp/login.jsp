@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" isELIgnored="false" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,6 +22,25 @@
 	href="${pageContext.request.contextPath}/plugins/adminLTE/css/AdminLTE.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/iCheck/square/blue.css">
+	<script>
+		<%--$(function () {--%>
+		<%--	$("#login").click(function () {--%>
+		<%--		$.get(--%>
+		<%--			"${pageContext.request.contextPath}/login",--%>
+		<%--			{"username":$("#username").val(),--%>
+		<%--			"password":$("#password").val()--%>
+		<%--			},function (data) {--%>
+		<%--				if (data.info == "success"){--%>
+		<%--					window.location = "${pageContext.request.contextPath}/pages/main.jsp";--%>
+		<%--				}else {--%>
+		<%--					window.location = "${pageContext.request.contextPath}/failer.jsp";--%>
+		<%--					// alert(data.error);--%>
+		<%--					// $("#error").html(data.error);--%>
+		<%--				}--%>
+		<%--			})--%>
+		<%--	})--%>
+		<%--})--%>
+	</script>
 </head>
 
 <body class="hold-transition login-page">
@@ -33,14 +52,14 @@
 		<div class="login-box-body">
 			<p class="login-box-msg">登录系统</p>
 
-			<form action="${pageContext.request.contextPath}/login.do" method="post">
+			<form action="${pageContext.request.contextPath}/login" method="post">
 				<div class="form-group has-feedback">
-					<input type="text" name="username" class="form-control"
+					<input type="text" id="username" name="username" class="form-control"
 						placeholder="用户名"> <span
 						class="glyphicon glyphicon-envelope form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
-					<input type="password" name="password" class="form-control"
+					<input type="password" id="password" name="password" class="form-control"
 						placeholder="密码"> <span
 						class="glyphicon glyphicon-lock form-control-feedback"></span>
 				</div>
@@ -70,7 +89,7 @@
 	<!-- Bootstrap 3.3.6 -->
 	<!-- iCheck -->
 	<script
-		src="${pageContext.request.contextPath}/plugins/jQuery/jquery-2.2.3.min.js"></script>
+		src="${pageContext.request.contextPath}/plugins/jQuery/jquery.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.min.js"></script>
 	<script

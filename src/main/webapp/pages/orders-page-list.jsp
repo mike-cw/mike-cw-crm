@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" isELIgnored="false" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 
 <head>
@@ -54,50 +54,6 @@
   <![endif]-->
 
 
-
-
-
-
-
-
-<!-- jQuery 2.2.3 -->
-<!-- jQuery UI 1.11.4 -->
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<!-- Bootstrap 3.3.6 -->
-<!-- Morris.js charts -->
-<!-- Sparkline -->
-<!-- jvectormap -->
-<!-- jQuery Knob Chart -->
-<!-- daterangepicker -->
-<!-- datepicker -->
-<!-- Bootstrap WYSIHTML5 -->
-<!-- Slimscroll -->
-<!-- FastClick -->
-<!-- iCheck -->
-<!-- AdminLTE App -->
-<!-- 表格树 -->
-<!-- select2 -->
-<!-- bootstrap color picker -->
-<!-- bootstrap time picker -->
-<!--<script src="${pageContext.request.contextPath}/${pageContext.request.contextPath}/${pageContext.request.contextPath}/plugins/timepicker/bootstrap-timepicker.min.js"></script>-->
-<!-- Bootstrap WYSIHTML5 -->
-<!--bootstrap-markdown-->
-<!-- CK Editor -->
-<!-- InputMask -->
-<!-- DataTables -->
-<!-- ChartJS 1.0.1 -->
-<!-- FLOT CHARTS -->
-<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
-<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
-<!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
-<!-- jQuery Knob -->
-<!-- Sparkline -->
-<!-- Morris.js charts -->
-<!-- Ion Slider -->
-<!-- Bootstrap slider -->
-<!-- bootstrap-datetimepicker -->
-<!-- 页面meta /-->
-
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -142,6 +98,9 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -149,10 +108,10 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 		<!-- 页面头部 /-->
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -237,37 +196,27 @@
 										<th class="text-center">操作</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tbody">
 
 
-									<c:forEach items="${pageInfo.list}" var="orders">
+<%--									<c:forEach items="${pageInfo.list}" var="orders">--%>
 
-										<tr>
-											<td><input name="ids" type="checkbox"></td>
-											<td>${orders.id }</td>
-											<td>${orders.orderNum }</td>
-											<td>${orders.product.productName }</td>
-											<td>${orders.product.productPrice }</td>
-											<td>${orders.orderTimeStr }</td>
-											<td class="text-center">${orders.orderStatusStr }</td>
-											<td class="text-center">
-												<button type="button" class="btn bg-olive btn-xs">订单</button>
-												<button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/orders/findById.do?id=${orders.id}'">详情</button>
-												<button type="button" class="btn bg-olive btn-xs">编辑</button>
-											</td>
-										</tr>
-									</c:forEach>
+<%--										<tr>--%>
+<%--											<td><input name="ids" type="checkbox"></td>--%>
+<%--											<td>${orders.id }</td>--%>
+<%--											<td>${orders.orderNum }</td>--%>
+<%--											<td>${orders.product.productName }</td>--%>
+<%--											<td>${orders.product.productPrice }</td>--%>
+<%--											<td>${orders.orderTimeStr }</td>--%>
+<%--											<td class="text-center">${orders.orderStatusStr }</td>--%>
+<%--											<td class="text-center">--%>
+<%--												<button type="button" class="btn bg-olive btn-xs">订单</button>--%>
+<%--												<button type="button" class="btn bg-olive btn-xs" onclick="location.href='${pageContext.request.contextPath}/orders/findById.do?id=${orders.id}'">详情</button>--%>
+<%--												<button type="button" class="btn bg-olive btn-xs">编辑</button>--%>
+<%--											</td>--%>
+<%--										</tr>--%>
+<%--									</c:forEach>--%>
 								</tbody>
-								<!--
-                            <tfoot>
-                            <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                            </tr>
-                            </tfoot>-->
 							</table>
 							<!--数据列表/-->
 
@@ -313,31 +262,26 @@
                 <div class="box-footer">
                     <div class="pull-left">
                         <div class="form-group form-inline">
-                            总共2 页，共14 条数据。 每页
-                            <select class="form-control" id="changePageSize" onchange="changePageSize()">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            总共<span id="pageTotals"></span> 页，共<span id="totalRecords"></span> 条数据。 每页
+                            <select class="form-control" id="changePageSize">
                             </select> 条
                         </div>
                     </div>
 
-                    <div class="box-tools pull-right">
-                        <ul class="pagination">
-                            <li>
-                                <a href="${pageContext.request.contextPath}/orders/findAll.do?page=1&size=${pageInfo.pageSize}" aria-label="Previous">首页</a>
-                            </li>
-                            <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pageNum-1}&size=${pageInfo.pageSize}">上一页</a></li>
-                           <c:forEach begin="1" end="${pageInfo.pages}" var="pageNum">
-							   <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>
-						   </c:forEach>
-                            <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pageNum+1}&size=${pageInfo.pageSize}">下一页</a></li>
-                            <li>
-                                <a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pages}&size=${pageInfo.pageSize}" aria-label="Next">尾页</a>
-                            </li>
-                        </ul>
+                    <div id="Pagination" class="box-tools pull-right">
+<%--                        <ul class="pagination">--%>
+<%--                            <li>--%>
+<%--                                <a href="${pageContext.request.contextPath}/orders/findAll.do?page=1&size=${pageInfo.pageSize}" aria-label="Previous">首页</a>--%>
+<%--                            </li>--%>
+<%--                            <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pageNum-1}&size=${pageInfo.pageSize}">上一页</a></li>--%>
+<%--                           <c:forEach begin="1" end="${pageInfo.pages}" var="pageNum">--%>
+<%--							   <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a></li>--%>
+<%--						   </c:forEach>--%>
+<%--                            <li><a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pageNum+1}&size=${pageInfo.pageSize}">下一页</a></li>--%>
+<%--                            <li>--%>
+<%--                                <a href="${pageContext.request.contextPath}/orders/findAll.do?page=${pageInfo.pages}&size=${pageInfo.pageSize}" aria-label="Next">尾页</a>--%>
+<%--                            </li>--%>
+<%--                        </ul>--%>
                     </div>
 
                 </div>
@@ -368,8 +312,7 @@
 	</div>
 
 
-	<script
-		src="${pageContext.request.contextPath}/plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/jquery.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/jQueryUI/jquery-ui.min.js"></script>
 	<script>
@@ -455,7 +398,97 @@
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/jquery.pagination.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 	<script>
+		var isFirst = true;
+		var currPage;
+		$(function(){
+			showAllOrd(1,3)
+
+			$("#changePageSize").change(function () {
+				$("#tbody").empty();
+				isFirst = true;
+				showAllOrd(1,$(this).val());
+			});
+		})
+
+		function showAllOrd(pageNo,pageSize) {
+			$.get(
+				"${pageContext.request.contextPath}/queryAllOrder",
+					{"pageNo":pageNo,
+					"pageSize":pageSize},
+				function (data) {
+					var $tbody = $("#tbody");
+					$tbody.empty();
+					$.each(data.list, function (index, ords) {
+						var $tr = $("<tr></tr>");
+						var $td0 = $("<td><input name='ids' value='" + ords.id + "' type='checkbox'/></td>")
+						var $td1 = $("<td>" + ords.id + "</td>");
+						var $td2 = $("<td>" + ords.orderNum + "</td>");
+						var $td3 = $("<td>" + ords.product.productName + "</td>");
+						var $td4 = $("<td>" + ords.product.productPrice * ords.peopleCount + "</td>");
+						var $td5 = $("<td>" + ords.orderTime + "</td>");
+						var $td8 = "";
+						if (ords.orderStatus === 1) {
+							$td8 = $("<td  class='text-center'>已支付</td>");
+						} else {
+							$td8 = $("<td  class='text-center'>未支付</td>");
+						}
+						var $td9 = $("<td class='text-center'></td>");
+						var $button1 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">订单</button>");
+						var $button2 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\" onclick=showOrderDetail('"+ords.id+"')>详情</button>");
+						var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
+						$td9.append($button1).append($button2).append($button3);
+						$tr.append($td0).append($td1).append($td2).append($td3).append($td4).append($td5).append($td8).append($td9);
+						$tbody.append($tr)
+					});
+					$("#pageTotals").html(data.pages);
+					$("#totalRecords").html(data.total);
+
+					$("#changePageSize").empty();
+					for (var i=1; i<=5; i++){
+						var $option;
+						if (i==data.pageSize){
+							$option = $("<option selected='selected'>"+i+"</option>")
+						}else {
+							$option = $("<option>"+i+"</option>")
+						}
+						$("#changePageSize").append($option)
+					}
+
+					if (isFirst){
+						initPagination(data.total,pageSize);
+						isFirst=false;
+					}
+			})
+		}
+
+		function showOrderDetail(oid) {
+			window.location = "${pageContext.request.contextPath}/order/queryOrderDetail/"+oid;
+		}
+
+		function initPagination(total,pageSize) {
+			$("#Pagination").pagination(total,{
+				num_edge_entries: 2, //边缘页数
+				num_display_entries:4, //主体按钮数
+				callback: pageselectCallback,  /*回调函数，当点击按钮的时候，就会调用指定的分页处理函数*/
+				items_per_page: pageSize, //每页显示记录数
+				prev_text: "前一页",
+				next_text: "后一页"
+			})
+			function pageselectCallback(page_index){
+				currPage = page_index + 1;
+				//首次加载的时候不要再次执行分页函数，因为一开始的时候就先做了加载数据，第二次开始，当点击分页按钮的时候重新加载分页函数拿到下一页的数据
+				if(!isFirst){
+					showAllOrd(page_index + 1, pageSize);
+				}
+				isFirst=false;
+				return false;
+			}
+		}
+
+
 		function changePageSize() {
 			//获取下拉框的值
 			var pageSize = $("#changePageSize").val();
@@ -464,7 +497,7 @@
 			location.href = "${pageContext.request.contextPath}/orders/findAll.do?page=1&size="
 					+ pageSize;
 		}
-		$(document).ready(function() {
+		$(function() {
 			// 选择框
 			$(".select2").select2();
 
@@ -483,7 +516,7 @@
 			}
 		}
 
-		$(document).ready(function() {
+		$(function() {
 
 			// 激活导航位置
 			setSidebarActive("admin-datalist");
@@ -503,7 +536,7 @@
 				}
 				$(this).data("clicks", !clicks);
 			});
-		});
+		})
 	</script>
 </body>
 

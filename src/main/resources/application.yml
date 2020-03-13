@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: admin
-    url: jdbc:mysql://localhost:3306/msg?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/crm?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -35,6 +35,13 @@ spring:
         login-password: 123456
         reset-enable: false
         url-pattern: /druid/*
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+    view:
+      prefix: /
+      suffix: .jsp
 
 
 mybatis:
@@ -42,9 +49,12 @@ mybatis:
   mapper-locations: classpath:com/hwua/mapper/*.xml
   type-aliases-package: com.hwua.pojo
   configuration:
-    lazy-loading-enabled: true
-    aggressive-lazy-loading: false
+#    lazy-loading-enabled: true
+#    aggressive-lazy-loading: false
     map-underscore-to-camel-case: true
 pagehelper:
   auto-dialect: mysql
   reasonable: true
+shiro:
+  enabled: true
+  loginUrl: /login.jsp

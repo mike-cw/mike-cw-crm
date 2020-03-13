@@ -59,6 +59,33 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/plugins/jQuery/jquery.js"></script>
+	<script>
+		$(function () {
+			$("#addPro").click(function(){
+				$.post(
+					"${pageContext.request.contextPath}/addNewPro",
+					{"productNum":$("#productNum").val(),
+					"productName":$("#productName").val(),
+					"departureTime":$("#datepicker-a3").val(),
+					"cityName":$("#cityName").val(),
+					"productPrice":$("#productPrice").val(),
+					"productStatus":$("#productStatus").val(),
+					"productDesc":$("#productDesc").val()
+					},function (data) {
+					alert(data)
+					if (data == "success"){
+						window.location = "${pageContext.request.contextPath}/pages/product-list.jsp"
+						}
+					})
+			}
+
+			)
+
+		})
+
+
+	</script>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -66,10 +93,10 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 		<!-- 页面头部 /-->
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -90,8 +117,7 @@
 			</section>
 			<!-- 内容头部 /-->
 
-			<form action="${pageContext.request.contextPath}/product/save.do"
-				method="post">
+			<form method="post">
 				<!-- 正文区域 -->
 				<section class="content"> <!--产品信息-->
 
@@ -101,12 +127,12 @@
 
 						<div class="col-md-2 title">产品编号</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="productNum"
+							<input type="text" class="form-control" id="productNum" name="productNum"
 								placeholder="产品编号" value="">
 						</div>
 						<div class="col-md-2 title">产品名称</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="productName"
+							<input type="text" class="form-control" id="productName" name="productName"
 								placeholder="产品名称" value="">
 						</div>
 						<div class="col-md-2 title">出发时间</div>
@@ -123,20 +149,20 @@
 
 						<div class="col-md-2 title">出发城市</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="cityName"
+							<input type="text" class="form-control" id="cityName" name="cityName"
 								placeholder="出发城市" value="">
 						</div>
 
 						<div class="col-md-2 title">产品价格</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" placeholder="产品价格"
+							<input type="text" class="form-control" id="productPrice" placeholder="产品价格"
 								name="productPrice" value="">
 						</div>
 
 						<div class="col-md-2 title">产品状态</div>
 						<div class="col-md-4 data">
 							<select class="form-control select2" style="width: 100%"
-								name="productStatus">
+								name="productStatus" id="productStatus">
 								<option value="0" selected="selected">关闭</option>
 								<option value="1">开启</option>
 							</select>
@@ -145,14 +171,14 @@
 						<div class="col-md-2 title rowHeight2x">其他信息</div>
 						<div class="col-md-10 data rowHeight2x">
 							<textarea class="form-control" rows="3" placeholder="其他信息"
-								name="productDesc"></textarea>
+								id="productDesc" name="productDesc"></textarea>
 						</div>
 
 					</div>
 				</div>
 				<!--订单信息/--> <!--工具栏-->
 				<div class="box-tools text-center">
-					<button type="submit" class="btn bg-maroon">保存</button>
+					<button type="button" id="addPro" class="btn bg-maroon">保存</button>
 					<button type="button" class="btn bg-default"
 						onclick="history.back(-1);">返回</button>
 				</div>

@@ -57,6 +57,9 @@
 	href="${pageContext.request.contextPath}/plugins/ionslider/ion.rangeSlider.skinNice.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
@@ -64,11 +67,11 @@
 	<div class="wrapper">
 
 		<!-- 页面头部 -->
-		<jsp:include page="header.jsp"></jsp:include>
+		<jsp:include page="/pages/header.jsp"></jsp:include>
 		<!-- 页面头部 /-->
 
 		<!-- 导航侧栏 -->
-		<jsp:include page="aside.jsp"></jsp:include>
+		<jsp:include page="/pages/aside.jsp"></jsp:include>
 		<!-- 导航侧栏 /-->
 
 		<!-- 内容区域 -->
@@ -139,9 +142,8 @@
 										<th class="text-center">操作</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tbody">
 
-									
 										<tr>
 											<td><input name="ids" type="checkbox"></td>
 											<td>1</td>
@@ -154,16 +156,6 @@
 										</tr>
 									
 								</tbody>
-								<!--
-                            <tfoot>
-                            <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                            </tr>
-                            </tfoot>-->
 							</table>
 							<!--数据列表/-->
 
@@ -177,28 +169,24 @@
 					<div class="box-footer">
 						<div class="pull-left">
 							<div class="form-group form-inline">
-								总共2 页，共14 条数据。 每页 <select class="form-control">
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-									<option>4</option>
-									<option>5</option>
+								总共<span id="pageTotals"></span> 页，共<span id="totalRecords"></span> 条数据。 每页 <select id="pageSize" class="form-control">
+
 								</select> 条
 							</div>
 						</div>
 
-						<div class="box-tools pull-right">
-							<ul class="pagination">
-								<li><a href="#" aria-label="Previous">首页</a></li>
-								<li><a href="#">上一页</a></li>
-								<li><a href="#">1</a></li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#">5</a></li>
-								<li><a href="#">下一页</a></li>
-								<li><a href="#" aria-label="Next">尾页</a></li>
-							</ul>
+						<div id="Pagination" class="box-tools pull-right">
+<%--							<ul class="pagination">--%>
+<%--								<li><a href="#" aria-label="Previous">首页</a></li>--%>
+<%--								<li><a href="#">上一页</a></li>--%>
+<%--								<li><a href="#">1</a></li>--%>
+<%--								<li><a href="#">2</a></li>--%>
+<%--								<li><a href="#">3</a></li>--%>
+<%--								<li><a href="#">4</a></li>--%>
+<%--								<li><a href="#">5</a></li>--%>
+<%--								<li><a href="#">下一页</a></li>--%>
+<%--								<li><a href="#" aria-label="Next">尾页</a></li>--%>
+<%--							</ul>--%>
 						</div>
 
 					</div>
@@ -273,8 +261,88 @@
 		<script src="../plugins/flot/jquery.flot.categories.min.js"></script>
 		<script src="../plugins/ionslider/ion.rangeSlider.min.js"></script>
 		<script src="../plugins/bootstrap-slider/bootstrap-slider.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/jquery.pagination.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 		<script>
-			$(document).ready(function() {
+			var isFirst = true;
+			var currPage;
+			$(function () {
+				pagination(1,3);
+
+				$("#pageSize").change(function () {
+					$("#tbody").empty();
+					isFirst = true;
+					pagination(1,$(this).val());
+				});
+
+
+			});
+
+			function pagination(pageNum,pageSize) {
+				$.get(
+						"${pageContext.request.contextPath}/queryAllPer",
+						{"pageNum":pageNum,
+							"pageSize":pageSize},
+						function (data) {
+							var $tbody = $("#tbody");
+							$tbody.empty();
+							$.each(data.list,function(index,pers){
+								var $tr = $("<tr></tr>");
+								var $td0 = $("<td><input name='ids' value='"+pers.id+"' type='checkbox'/></td>")
+								var $td1 = $("<td>"+pers.id+"</td>");
+								var $td2 = $("<td>"+pers.permissionName+"</td>");
+								var $td3 = $("<td>"+pers.url+"</td>");
+								var $td9 = $("<td class='text-center'></td>");
+								var $a1 = $("<a href='/permission/findById.do?id=${p.id}' class='btn bg-olive btn-xs'>详情</a>");
+								var $a2 = $("<a href=\"/permission/deletePermission.do?id=${p.id}\" class=\"btn bg-olive btn-xs\">删除权限</a>");
+								$td9.append($a1).append($a2);
+								$tr.append($td0).append($td1).append($td2).append($td3).append($td9);
+								$tbody.append($tr)
+							});
+
+							$("#pageTotals").html(data.pages);
+							$("#totalRecords").html(data.total);
+
+							$("#pageSize").empty();
+							for (var i=1; i<=5; i++){
+								var $option;
+								if (i==data.pageSize){
+									$option = $("<option selected='selected'>"+i+"</option>")
+								}else {
+									$option = $("<option>"+i+"</option>")
+								}
+								$("#pageSize").append($option)
+							}
+							if (isFirst){
+								initPagination(data.total,pageSize);
+								isFirst=false;
+							}
+						}
+				)
+			}
+
+			function initPagination(total,pageSize) {
+				$("#Pagination").pagination(total,{
+					num_edge_entries: 2, //边缘页数
+					num_display_entries:4, //主体按钮数
+					callback: pageselectCallback,  /*回调函数，当点击按钮的时候，就会调用指定的分页处理函数*/
+					items_per_page: pageSize, //每页显示记录数
+					prev_text: "前一页",
+					next_text: "后一页"
+				})
+				function pageselectCallback(page_index){
+					currPage = page_index + 1;
+					//首次加载的时候不要再次执行分页函数，因为一开始的时候就先做了加载数据，第二次开始，当点击分页按钮的时候重新加载分页函数拿到下一页的数据
+					if(!isFirst){
+						pagination(page_index + 1, pageSize);
+					}
+					isFirst=false;
+					return false;
+				}
+			}
+
+
+			$(function() {
 				// 选择框
 				$(".select2").select2();
 
@@ -293,8 +361,7 @@
 				}
 			}
 
-			$(document)
-					.ready(
+			$(
 							function() {
 
 								// 激活导航位置
