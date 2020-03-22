@@ -58,6 +58,9 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 	<body class="hold-transition skin-purple sidebar-mini">
@@ -88,8 +91,7 @@
 			</section>
 			<!-- 内容头部 /-->
 
-			<form action="${pageContext.request.contextPath}/permission/save.do"
-				method="post">
+			<form >
 				<!-- 正文区域 -->
 				<section class="content"> <!--产品信息-->
 
@@ -99,12 +101,12 @@
 
 						<div class="col-md-2 title">权限名称</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="permissionName"
+							<input type="text" class="form-control" id="permissionName" name="permissionName"
 								placeholder="权限名称" value="">
 						</div>
 						<div class="col-md-2 title">RUL</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="url"
+							<input type="text" class="form-control" id="url" name="url"
 								placeholder="URL" value="">
 						</div>
 										
@@ -113,7 +115,7 @@
 				</div>
 				<!--订单信息/--> <!--工具栏-->
 				<div class="box-tools text-center">
-					<button type="submit" class="btn bg-maroon">保存</button>
+					<button type="button" id="savePer" class="btn bg-maroon">保存</button>
 					<button type="button" class="btn bg-default"
 						onclick="history.back(-1);">返回</button>
 				</div>
@@ -221,9 +223,47 @@
 		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 
 	<script>
-		$(document).ready(function() {
+		$(function () {
+			$("#savePer").click(function () {
+				savePer();
+			})
+		});
+
+		function reset () {
+			alertify.set({
+				labels : {
+					ok : "确定",
+					cancel : "取消"
+				},
+				delay : 5000,
+				buttonReverse : false,
+				buttonFocus : "ok"
+			});
+		}
+
+		function savePer(){
+			reset();
+			$.post(
+					"${pageContext.request.contextPath}/permission/add",
+					{"permissionName":$("#permissionName").val(),
+						"url":$("#url").val()},
+					function (data) {
+						if (data.info == "success"){
+							alertify.alert("添加成功");
+							return false;
+						}else {
+							alertify.alert("添加失败");
+							return false;
+						}
+					}
+			)
+		}
+
+
+		$(function() {
 			// 选择框
 			$(".select2").select2();
 

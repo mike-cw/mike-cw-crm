@@ -58,6 +58,9 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -83,14 +86,13 @@
 				<li><a href="${pageContext.request.contextPath}/index.jsp"><i
 						class="fa fa-dashboard"></i> 首页</a></li>
 				<li><a
-					href="${pageContext.request.contextPath}/user/findAll.do">用户管理</a></li>
+					href="${pageContext.request.contextPath}/pages/user-list.jsp">用户管理</a></li>
 				<li class="active">用户表单</li>
 			</ol>
 			</section>
 			<!-- 内容头部 /-->
 
-			<form action="${pageContext.request.contextPath}/register"
-				method="post">
+			<form >
 				<!-- 正文区域 -->
 				<section class="content"> <!--产品信息-->
 
@@ -100,28 +102,28 @@
 
 						<div class="col-md-2 title">用户名称</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="username"
+							<input type="text" class="form-control" id="username" name="c"
 								placeholder="用户名称" value="">
 						</div>
 						<div class="col-md-2 title">密码</div>
 						<div class="col-md-4 data">
-							<input type="password" class="form-control" name="password"
+							<input type="password" class="form-control" id="password" name="password"
 								placeholder="密码" value="">
 						</div>
 						<div class="col-md-2 title">邮箱</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="email"
+							<input type="text" class="form-control" id="email" name="email"
 								placeholder="邮箱" value="">
 						</div>
 						<div class="col-md-2 title">联系电话</div>
 						<div class="col-md-4 data">
-							<input type="text" class="form-control" name="phoneNum"
+							<input type="text" class="form-control" id="phoneNum" name="phoneNum"
 								placeholder="联系电话" value="">
 						</div>
 						<div class="col-md-2 title">用户状态</div>
 						<div class="col-md-4 data">
 							<select class="form-control select2" style="width: 100%"
-								name="status">
+								id="status" name="status">
 								<option value="0" selected="selected">关闭</option>
 								<option value="1">开启</option>
 							</select>
@@ -131,7 +133,7 @@
 				</div>
 				<!--订单信息/--> <!--工具栏-->
 				<div class="box-tools text-center">
-					<button type="submit" class="btn bg-maroon">保存</button>
+					<button type="button" id="addUser" class="btn bg-maroon">保存</button>
 					<button type="button" class="btn bg-default"
 						onclick="history.back(-1);">返回</button>
 				</div>
@@ -239,9 +241,49 @@
 		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 	<script>
-		$(document).ready(function() {
+		$(function () {
+			$("#addUser").click(function () {
+				addUser();
+			})
+		});
+
+		function reset () {
+			alertify.set({
+				labels : {
+					ok : "确定",
+					cancel : "取消"
+				},
+				delay : 5000,
+				buttonReverse : false,
+				buttonFocus : "ok"
+			});
+		}
+
+		function addUser(){
+			reset();
+			$.post(
+				"${pageContext.request.contextPath}/user/add",
+				{"username":$("#username").val(),
+				"password":$("#password").val(),
+				"email":$("#email").val(),
+				"phoneNum":$("#phoneNum").val(),
+				"status":$("#status").val()},
+				function (data) {
+					if (data.info == "success"){
+						alertify.alert("添加成功");
+						return false;
+					}else {
+						alertify.alert("添加失败");
+						return false;
+					}
+				}
+			)
+		}
+
+
+		$(function() {
 			// 选择框
 			$(".select2").select2();
 

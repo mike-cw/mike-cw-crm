@@ -145,17 +145,17 @@
 								<tbody id="tbody">
 
 									
-										<tr>
-											<td><input name="ids" type="checkbox"></td>
-											<td>1</td>
-											<td>admin</td>
-											<td>管理员</td>																				
-											<td class="text-center">
-												<a href="${pageContext.request.contextPath}/role/findById.do?id=${role.id}" class="btn bg-olive btn-xs">详情</a>
-												<a href="${pageContext.request.contextPath}/role/deleteRole.do?id=${role.id}" class="btn bg-olive btn-xs">删除角色</a>
-												<a href="${pageContext.request.contextPath}/role/findRoleByIdAndAllPermission.do?id=${role.id}" class="btn bg-olive btn-xs">添加权限</a>
-											</td>
-										</tr>
+<%--										<tr>--%>
+<%--											<td><input name="ids" type="checkbox"></td>--%>
+<%--											<td>1</td>--%>
+<%--											<td>admin</td>--%>
+<%--											<td>管理员</td>																				--%>
+<%--											<td class="text-center">--%>
+<%--												<a href="${pageContext.request.contextPath}/role/findById.do?id=${role.id}" class="btn bg-olive btn-xs">详情</a>--%>
+<%--												<a href="${pageContext.request.contextPath}/role/deleteRole.do?id=${role.id}" class="btn bg-olive btn-xs">删除角色</a>--%>
+<%--												<a href="${pageContext.request.contextPath}/role/findRoleByIdAndAllPermission.do?id=${role.id}" class="btn bg-olive btn-xs">添加权限</a>--%>
+<%--											</td>--%>
+<%--										</tr>--%>
 									
 								</tbody>
 
@@ -284,7 +284,7 @@
 
 			function pagination(pageNum,pageSize) {
 				$.get(
-						"${pageContext.request.contextPath}/queryAllRole",
+						"${pageContext.request.contextPath}/role/queryAllRole",
 						{"pageNum":pageNum,
 							"pageSize":pageSize},
 						function (data) {
@@ -293,13 +293,13 @@
 							$.each(data.list,function(index,role){
 								var $tr = $("<tr></tr>");
 								var $td0 = $("<td><input name='ids' value='"+role.id+"' type='checkbox'/></td>")
-								var $td1 = $("<td>"+role.id+"</td>");
+								var $td1 = $("<td>"+((index+1)+(pageNum-1)*pageSize)+"</td>");
 								var $td2 = $("<td>"+role.roleName+"</td>");
 								var $td3 = $("<td>"+role.roleDesc+"</td>");
 								var $td9 = $("<td class='text-center'></td>");
-								var $a1 = $("<a href=\"/role/findById.do?id=${role.id}\" class=\"btn bg-olive btn-xs\">详情</a>");
+								var $a1 = $("<a href=javascript:showRole('"+role.id+"') class=\"btn bg-olive btn-xs\">详情</a>");
 								var $a2 = $("<a href=\"/role/deleteRole.do?id=${role.id}\" class=\"btn bg-olive btn-xs\">删除角色</a>");
-								var $a3 = $("<a href=\"/role/findRoleByIdAndAllPermission.do?id=${role.id}\" class=\"btn bg-olive btn-xs\">添加权限</a>");
+								var $a3 = $("<a href=javascript:roleAddPer('"+role.id+"') class=\"btn bg-olive btn-xs\">添加权限</a>");
 								$td9.append($a1).append($a2).append($a3);
 								$tr.append($td0).append($td1).append($td2).append($td3).append($td9);
 								$tbody.append($tr)
@@ -324,6 +324,14 @@
 							}
 						}
 				)
+			}
+			
+			function showRole(rid) {
+				window.location = "${pageContext.request.contextPath}/role/showRole/"+rid;
+			}
+
+			function roleAddPer(rid) {
+				window.location = "${pageContext.request.contextPath}/role/roleAddPer/"+rid;
 			}
 
 			function initPagination(total,pageSize) {

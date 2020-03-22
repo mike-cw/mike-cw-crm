@@ -59,6 +59,9 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -84,15 +87,13 @@
 				<li><a href="${pageContext.request.contextPath}/index.jsp"><i
 						class="fa fa-dashboard"></i> 首页</a></li>
 				<li><a
-					href="${pageContext.request.contextPath}/user/findAll.do">用户管理</a></li>
+					href="${pageContext.request.contextPath}/pages/user-list.jsp">用户管理</a></li>
 				<li class="active">添加角色表单</li>
 			</ol>
 			</section>
 			<!-- 内容头部 /-->
 
-			<form
-				action="${pageContext.request.contextPath}/user/addRoleToUser.do"
-				method="post">
+			<form>
 				<!-- 正文区域 -->
 				<section class="content"> 
 				
@@ -110,26 +111,26 @@
 									<th class="sorting">角色描述</th>									
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="tbody">
 							
-									<tr>
-										<td>
-										
-										<input name="ids" type="checkbox" value="1">
-										
-										</td>
-										<td>1</td>
-										<td>admin</td>
-										<td>管理员</td>
-										
-									</tr>
+<%--									<tr>--%>
+<%--										<td>--%>
+<%--										--%>
+<%--										<input name="ids" type="checkbox" value="1">--%>
+<%--										--%>
+<%--										</td>--%>
+<%--										<td>1</td>--%>
+<%--										<td>admin</td>--%>
+<%--										<td>管理员</td>--%>
+<%--										--%>
+<%--									</tr>--%>
 								
 							</tbody>
 
 						</table>
 				<!--订单信息/--> <!--工具栏-->
 				<div class="box-tools text-center">
-					<button type="submit" class="btn bg-maroon">保存</button>
+					<button type="button" id="saveRole" class="btn bg-maroon">保存</button>
 					<button type="button" class="btn bg-default"
 						onclick="history.back(-1);">返回</button>
 				</div>
@@ -237,9 +238,84 @@
 		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 	<script>
-		$(document).ready(function() {
+		$(function () {
+			showRole();
+
+			$("#saveRole").click(function () {
+				addRole('${uid}')
+			})
+		});
+
+		function showRole() {
+			$.get(
+					"${pageContext.request.contextPath}/role/queryAllRole1",
+					function (data) {
+						var $tbody = $("#tbody");
+						$tbody.empty();
+						$.each(data.roleList,function(index,role){
+							var $tr = $("<tr></tr>");
+							var $td0 = $("<td><input name='ids' value='"+role.id+"' type='checkbox'/></td>")
+							var $td1 = $("<td>"+role.id+"</td>");
+							var $td2 = $("<td>"+role.roleName+"</td>");
+							var $td3 = $("<td>"+role.roleDesc+"</td>");
+							$tr.append($td0).append($td1).append($td2).append($td3);
+							$tbody.append($tr)
+						});
+					}
+			)
+		}
+
+		function reset () {
+			alertify.set({
+				labels : {
+					ok : "确定",
+					cancel : "取消"
+				},
+				delay : 5000,
+				buttonReverse : false,
+				buttonFocus : "ok"
+			});
+		}
+
+
+		function addRole(uid){
+			reset();
+			var ids = [];
+			$("input[name='ids']:checked").each(function (index) {
+				ids[index] = $(this).val();
+			});
+
+			if (ids.length == 0){
+				alertify.alert("请选择需要添加的角色！");
+				return false;
+			}else {
+				alertify.confirm("是否确认添加对应角色?",
+						function(){
+							$.ajax({
+								url : "${pageContext.request.contextPath}/user/addRoleByUid",
+								type:"post",
+								traditional: true,
+								dataType : "json",
+								data : {
+									"ids" : ids,
+									"uid": uid
+								},
+								success: function () {
+									alertify.alert("添加成功！");
+									return false;
+								}
+							})
+						},
+					function () {
+						alertify.error('取消');
+					}
+				);
+			}
+		}
+
+		$(function() {
 			// 选择框
 			$(".select2").select2();
 

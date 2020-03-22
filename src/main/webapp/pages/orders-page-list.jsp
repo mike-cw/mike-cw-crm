@@ -415,7 +415,7 @@
 
 		function showAllOrd(pageNo,pageSize) {
 			$.get(
-				"${pageContext.request.contextPath}/queryAllOrder",
+				"${pageContext.request.contextPath}/order/queryAllOrder",
 					{"pageNo":pageNo,
 					"pageSize":pageSize},
 				function (data) {
@@ -424,7 +424,7 @@
 					$.each(data.list, function (index, ords) {
 						var $tr = $("<tr></tr>");
 						var $td0 = $("<td><input name='ids' value='" + ords.id + "' type='checkbox'/></td>")
-						var $td1 = $("<td>" + ords.id + "</td>");
+						var $td1 = $("<td>" + ((index+1)+(pageNo-1)*pageSize) + "</td>");
 						var $td2 = $("<td>" + ords.orderNum + "</td>");
 						var $td3 = $("<td>" + ords.product.productName + "</td>");
 						var $td4 = $("<td>" + ords.product.productPrice * ords.peopleCount + "</td>");
@@ -436,10 +436,10 @@
 							$td8 = $("<td  class='text-center'>未支付</td>");
 						}
 						var $td9 = $("<td class='text-center'></td>");
-						var $button1 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">订单</button>");
+						// var $button1 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">订单</button>");
 						var $button2 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\" onclick=showOrderDetail('"+ords.id+"')>详情</button>");
-						var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
-						$td9.append($button1).append($button2).append($button3);
+						// var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
+						$td9.append($button2);
 						$tr.append($td0).append($td1).append($td2).append($td3).append($td4).append($td5).append($td8).append($td9);
 						$tbody.append($tr)
 					});

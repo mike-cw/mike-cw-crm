@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 
@@ -109,6 +109,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -180,10 +183,14 @@
                             </div>
                         </div>
                         <div class="box-tools pull-right">
-                            <div class="has-feedback">
-                                <input type="text" class="form-control input-sm" placeholder="搜索">
-                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                            </div>
+<%--                            <div class="has-feedback">--%>
+<%--                                <input type="text" class="form-control input-sm" placeholder="搜索">--%>
+                                <form>
+                                    <input type="text" id="term" class="form-control input-sm"
+                                           placeholder="输入关键词">
+                                    <button type="button" onclick="find()">搜索</button>
+                                </form>
+<%--                            </div>--%>
                         </div>
                         <!--工具栏/-->
 
@@ -205,67 +212,42 @@
                                 <th class="text-center">操作</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbody">
                            
-                            <tr>
-                                <td><input name="ids" type="checkbox"></td>
-                                <td>2</td>
-                                <td>hwua-001
-                                </td>
-                                <td>上海5日游</td>
-                                <td>上海</td>
-                                <td>2018-03-10 19:00:00</td>
-                                <td class="text-center">850</td>
-                                <td class="text-center">关闭</td>
-                                <td class="text-center">${product.productStatusStr}</td>
-                                <td class="text-center">
-                                    <button type="button" class="btn bg-olive btn-xs">订单</button>
-                                    <button type="button" class="btn bg-olive btn-xs">详情</button>
-                                    <button type="button" class="btn bg-olive btn-xs">编辑</button>
-                                </td>
-                            </tr>
+<%--                            <tr>--%>
+<%--                                <td><input name="ids" type="checkbox"></td>--%>
+<%--                                <td>2</td>--%>
+<%--                                <td>hwua-001--%>
+<%--                                </td>--%>
+<%--                                <td>上海5日游</td>--%>
+<%--                                <td>上海</td>--%>
+<%--                                <td>2018-03-10 19:00:00</td>--%>
+<%--                                <td class="text-center">850</td>--%>
+<%--                                <td class="text-center">关闭</td>--%>
+<%--                                <td class="text-center">${product.productStatusStr}</td>--%>
+<%--                                <td class="text-center">--%>
+<%--                                    <button type="button" class="btn bg-olive btn-xs">订单</button>--%>
+<%--                                    <button type="button" class="btn bg-olive btn-xs">详情</button>--%>
+<%--                                    <button type="button" class="btn bg-olive btn-xs">编辑</button>--%>
+<%--                                </td>--%>
+<%--                            </tr>--%>
                            
 
                             </tbody>
-                            <!--
-                        <tfoot>
-                        <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        </tr>
-                        </tfoot>-->
                         </table>
                         <!--数据列表/-->
 
                         <!--工具栏-->
                         <div class="pull-left">
                             <div class="form-group form-inline">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default" title="新建"><i
-                                            class="fa fa-file-o"></i> 新建
-                                    </button>
-                                    <button type="button" class="btn btn-default" title="删除"><i
-                                            class="fa fa-trash-o"></i> 删除
-                                    </button>
-                                    <button type="button" class="btn btn-default" title="开启"><i class="fa fa-check"></i>
-                                        开启
-                                    </button>
-                                    <button type="button" class="btn btn-default" title="屏蔽"><i class="fa fa-ban"></i>
-                                        屏蔽
-                                    </button>
-                                    <button type="button" class="btn btn-default" title="刷新"><i
-                                            class="fa fa-refresh"></i> 刷新
-                                    </button>
-                                </div>
+
                             </div>
                         </div>
                         <div class="box-tools pull-right">
                             <div class="has-feedback">
-                                <input type="text" class="form-control input-sm" placeholder="搜索">
-                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+<%--                                <input type="text" id="term" class="form-control input-sm"--%>
+<%--                                       placeholder="输入关键词">--%>
+<%--                                <button type="button" onclick="find()">搜索</button>--%>
                             </div>
                         </div>
                         <!--工具栏/-->
@@ -281,33 +263,15 @@
                 <div class="box-footer">
                     <div class="pull-left">
                         <div class="form-group form-inline">
-                            总共2 页，共14 条数据。 每页
-                            <select class="form-control">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            总共<span id="pageTotals"></span>页，共<span id="totalRecords"></span> 条数据。 每页
+                            <select class="form-control" id="pageSize">
+
                             </select> 条
                         </div>
                     </div>
 
-                    <div class="box-tools pull-right">
-                        <ul class="pagination">
-                            <li>
-                                <a href="#" aria-label="Previous">首页</a>
-                            </li>
-                            <li><a href="#">上一页</a></li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">下一页</a></li>
-                            <li>
-                                <a href="#" aria-label="Next">尾页</a>
-                            </li>
-                        </ul>
+                    <div id="Pagination" class="box-tools pull-right">
+
                     </div>
 
                 </div>
@@ -377,11 +341,203 @@
 <script src="${pageContext.request.contextPath}/plugins/flot/jquery.flot.pie.min.js"></script>
 <script src="${pageContext.request.contextPath}/plugins/flot/jquery.flot.categories.min.js"></script>
 <script src="${pageContext.request.contextPath}/plugins/ionslider/ion.rangeSlider.min.js"></script>
-<script src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
+<script src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider(1).js"></script>
 <script src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 <script src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${pageContext.request.contextPath}/plugins/jQuery/jquery.pagination.js"></script>
+<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 <script>
-    $(document).ready(function () {
+    var isFirst = true;
+    var currPage;
+    $(function () {
+        pagination(1,3);
+
+        $("#pageSize").change(function () {
+            $("#tbody").empty();
+            isFirst = true;
+            pagination(1,$(this).val());
+        });
+
+        $("#openStatus").click(function () {
+            updateProStatus(1);
+        });
+
+        $("#shieldStatus").click(function(){
+            updateProStatus(0);
+        });
+
+        $("#delPro").click(function () {
+            delProById();
+        })
+
+
+    });
+
+
+
+    function pagination(pageNum,pageSize) {
+        $.get(
+            "${pageContext.request.contextPath}/product/findlike2",
+            {"pageNum":pageNum,
+            "pageSize":pageSize},
+            function (data) {
+                var $tbody = $("#tbody");
+                $tbody.empty();
+                $.each(data.list,function(index,pros){
+                    var $tr = $("<tr></tr>");
+                    var $td0 = $("<td><input name='ids' value='"+pros.id+"' type='checkbox'/></td>")
+                    var $td1 = $("<td>"+((index+1)+(pageNum-1)*pageSize)+"</td>");
+                    var $td2 = $("<td>"+pros.productNum+"</td>");
+                    var $td3 = $("<td>"+pros.productName+"</td>");
+                    var $td4 = $("<td>"+pros.cityName+"</td>");
+                    var $td5 = $("<td>"+pros.departureTime+"</td>");
+                    var $td6 = $("<td class='text-center'>"+pros.productPrice+"</td>");
+                    var $td7 = $("<td>"+pros.productDesc+"</td>");
+                    var $td8 = "";
+                    if (pros.productStatus === 1){
+                        $td8 = $("<td  class='text-center'>开启</td>");
+                    }else {
+                        $td8 = $("<td  class='text-center'>关闭</td>");
+                    }
+                    var $td9 = $("<td class='text-center'></td>");
+                    var $button1 = $("<button type=\"button\"  class='btn bg-olive btn-xs' onclick=showOrd('"+pros.id+"')>订单</button>");
+                    // var $button2 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">详情</button>");
+                    // var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
+                    $td9.append($button1);
+                    $tr.append($td0).append($td1).append($td2).append($td3).append($td4).append($td5).append($td6).append($td7).append($td8).append($td9);
+                    $tbody.append($tr)
+                });
+
+                $("#pageTotals").html(data.pages);
+                $("#totalRecords").html(data.total);
+
+                $("#pageSize").empty();
+                for (var i=1; i<=5; i++){
+                    var $option;
+                    if (i==data.pageSize){
+                        $option = $("<option selected='selected'>"+i+"</option>")
+                    }else {
+                        $option = $("<option>"+i+"</option>")
+                    }
+                    $("#pageSize").append($option)
+                }
+                if (isFirst){
+                    initPagination(data.total,pageSize);
+                    isFirst=false;
+                }
+            }
+        )
+    }
+
+    function showOrd(pid) {
+        window.location = "${pageContext.request.contextPath}/order/queryOrdByPid/"+pid;
+    }
+
+    function initPagination(total,pageSize) {
+        $("#Pagination").pagination(total,{
+            num_edge_entries: 2, //边缘页数
+            num_display_entries:4, //主体按钮数
+            callback: pageselectCallback,  /*回调函数，当点击按钮的时候，就会调用指定的分页处理函数*/
+            items_per_page: pageSize, //每页显示记录数
+            prev_text: "前一页",
+            next_text: "后一页"
+        });
+        function pageselectCallback(page_index){
+            currPage = page_index + 1;
+            //首次加载的时候不要再次执行分页函数，因为一开始的时候就先做了加载数据，第二次开始，当点击分页按钮的时候重新加载分页函数拿到下一页的数据
+            if(!isFirst){
+                pagination(page_index + 1, pageSize);
+            }
+            isFirst=false;
+            return false;
+        }
+    }
+
+    function reset () {
+        alertify.set({
+            labels : {
+                ok : "确定",
+                cancel : "取消"
+            },
+            delay : 5000,
+            buttonReverse : false,
+            buttonFocus : "ok"
+        });
+    }
+
+    function updateProStatus(status) {
+        reset();
+        var ids = [];
+        $("input[name='ids']:checked").each(function (index) {
+            ids[index]=$(this).val();
+        })
+        if(ids.length==0){
+            alertify.alert("请选择要操作的选项！");
+            return false;
+        }else{
+            alertify.confirm("是否确定更新?",
+                function(){
+                    $.ajax({
+                        url : "${pageContext.request.contextPath}/product/updateProStatus",
+                        type:"post",
+                        traditional: true,
+                        dataType : "json",
+                        data : {
+                            "_method":"put",
+                            "ids" : ids,
+                            "status": status
+                        },
+                        success: function () {
+                            pagination(currPage,$("#pageSize").val());
+                        }
+                    })
+                },
+                function(){
+                    alertify.error('取消');
+                });
+        }
+    }
+
+    function delProById(){
+        reset();
+        var ids = [];
+        $("input[name='ids']:checked").each(function (index) {
+            ids[index]=$(this).val();
+        });
+        if(ids.length==0){
+            alert().alert("请选择要操作的选项！");
+            return false;
+        }else{
+            alertify.confirm("是否确定删除?",
+                function(){
+                    $.ajax({
+                        url : "${pageContext.request.contextPath}/product/delProduct",
+                        type:"post",
+                        traditional: true,
+                        dataType : "json",
+                        data : {
+                            "_method":"delete",
+                            "ids" : ids
+                        },
+                        success: function () {
+                            pagination(currPage,$("#pageSize").val());
+                        }
+                    })
+                },
+                function(){
+                    alertify.error('取消');
+                });
+        }
+    }
+
+    function find(){
+        var term = $("#term").val();
+        if (term != "" && term != null){
+            window.location.href = "${pageContext.request.contextPath}/product/findlike1/" + term;
+        }
+    }
+
+    $(function () {
         // 选择框
         $(".select2").select2();
 
@@ -402,7 +558,7 @@
     }
 
 
-    $(document).ready(function () {
+    $(function () {
 
         // 激活导航位置
         setSidebarActive("admin-datalist");

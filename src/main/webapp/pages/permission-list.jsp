@@ -86,7 +86,7 @@
 				<li><a href="${pageContext.request.contextPath}/index.jsp"><i
 						class="fa fa-dashboard"></i> 首页</a></li>
 				<li><a
-					href="${pageContext.request.contextPath}/permission/findAll.do">资源权限管理</a></li>
+					href="${pageContext.request.contextPath}/pages/permission-list.jsp">资源权限管理</a></li>
 
 				<li class="active">全部权限</li>
 			</ol>
@@ -280,7 +280,7 @@
 
 			function pagination(pageNum,pageSize) {
 				$.get(
-						"${pageContext.request.contextPath}/queryAllPer",
+						"${pageContext.request.contextPath}/permission/queryAllPer",
 						{"pageNum":pageNum,
 							"pageSize":pageSize},
 						function (data) {
@@ -289,11 +289,11 @@
 							$.each(data.list,function(index,pers){
 								var $tr = $("<tr></tr>");
 								var $td0 = $("<td><input name='ids' value='"+pers.id+"' type='checkbox'/></td>")
-								var $td1 = $("<td>"+pers.id+"</td>");
+								var $td1 = $("<td>"+((index+1)+(pageNum-1)*pageSize)+"</td>");
 								var $td2 = $("<td>"+pers.permissionName+"</td>");
 								var $td3 = $("<td>"+pers.url+"</td>");
 								var $td9 = $("<td class='text-center'></td>");
-								var $a1 = $("<a href='/permission/findById.do?id=${p.id}' class='btn bg-olive btn-xs'>详情</a>");
+								var $a1 = $("<a href=javascript:showPer('"+pers.id+"') class='btn bg-olive btn-xs'>详情</a>");
 								var $a2 = $("<a href=\"/permission/deletePermission.do?id=${p.id}\" class=\"btn bg-olive btn-xs\">删除权限</a>");
 								$td9.append($a1).append($a2);
 								$tr.append($td0).append($td1).append($td2).append($td3).append($td9);
@@ -319,6 +319,10 @@
 							}
 						}
 				)
+			}
+
+			function showPer(pid) {
+				window.location = "${pageContext.request.contextPath}/permission/showPer/"+pid;
 			}
 
 			function initPagination(total,pageSize) {

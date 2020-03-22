@@ -64,7 +64,7 @@
 		$(function () {
 			$("#addPro").click(function(){
 				$.post(
-					"${pageContext.request.contextPath}/addNewPro",
+					"${pageContext.request.contextPath}/product/add",
 					{"productNum":$("#productNum").val(),
 					"productName":$("#productName").val(),
 					"departureTime":$("#datepicker-a3").val(),

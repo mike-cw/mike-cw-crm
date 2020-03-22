@@ -59,6 +59,9 @@
 	href="${pageContext.request.contextPath}/plugins/bootstrap-slider/slider.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/page.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.core.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/alertify.default.css">
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -84,15 +87,13 @@
 				<li><a href="${pageContext.request.contextPath}/index.jsp"><i
 						class="fa fa-dashboard"></i> 首页</a></li>
 				<li><a
-					href="${pageContext.request.contextPath}/role/findAll.do">角色管理</a></li>
+					href="${pageContext.request.contextPath}/pages/role-list.jsp">角色管理</a></li>
 				<li class="active">添加权限表单</li>
 			</ol>
 			</section>
 			<!-- 内容头部 /-->
 
-			<form
-				action="${pageContext.request.contextPath}/role/addPermissionToRole.do"
-				method="post">
+			<form>
 				<!-- 正文区域 -->
 				<section class="content"> 
 				
@@ -110,26 +111,26 @@
 									<th class="sorting">权限URL</th>
 								</tr>
 							</thead>
-							<tbody>
-								<c:forEach items="${permissionList}" var="permission">
-									<tr>
-										<td>
-										
-										<input name="ids" type="checkbox" value="${permission.id}">
-										
-										</td>
-										<td>${permission.id}</td>
-										<td>${permission.permissionName }</td>
-										<td>${permission.url}</td>
-										
-									</tr>
-								</c:forEach>
+							<tbody id="tbody">
+<%--								<c:forEach items="${permissionList}" var="permission">--%>
+<%--									<tr>--%>
+<%--										<td>--%>
+
+<%--										<input name="ids" type="checkbox" value="${permission.id}">--%>
+
+<%--										</td>--%>
+<%--										<td>${permission.id}</td>--%>
+<%--										<td>${permission.permissionName }</td>--%>
+<%--										<td>${permission.url}</td>--%>
+
+<%--									</tr>--%>
+<%--								</c:forEach>--%>
 							</tbody>
 
 						</table>
 				<!--订单信息/--> <!--工具栏-->
 				<div class="box-tools text-center">
-					<button type="submit" class="btn bg-maroon">保存</button>
+					<button type="button" id="savePer" class="btn bg-maroon">保存</button>
 					<button type="button" class="btn bg-default"
 						onclick="history.back(-1);">返回</button>
 				</div>
@@ -237,9 +238,84 @@
 		src="${pageContext.request.contextPath}/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-
+	<script src="${pageContext.request.contextPath}/plugins/jQuery/alertify.js"></script>
 	<script>
-		$(document).ready(function() {
+		$(function () {
+			showPer();
+
+			$("#savePer").click(function () {
+				addPer('${rid}')
+			})
+		});
+
+		function showPer() {
+			$.get(
+					"${pageContext.request.contextPath}/permission/queryAllPer1",
+					function (data) {
+						var $tbody = $("#tbody");
+						$tbody.empty();
+						$.each(data.perList,function(index,per){
+							var $tr = $("<tr></tr>");
+							var $td0 = $("<td><input name='ids' value='"+per.id+"' type='checkbox'/></td>")
+							var $td1 = $("<td>"+per.id+"</td>");
+							var $td2 = $("<td>"+per.permissionName+"</td>");
+							var $td3 = $("<td>"+per.url+"</td>");
+							$tr.append($td0).append($td1).append($td2).append($td3);
+							$tbody.append($tr)
+						});
+					}
+			)
+		}
+
+		function reset () {
+			alertify.set({
+				labels : {
+					ok : "确定",
+					cancel : "取消"
+				},
+				delay : 5000,
+				buttonReverse : false,
+				buttonFocus : "ok"
+			});
+		}
+
+
+		function addPer(rid){
+			reset();
+			var ids = [];
+			$("input[name='ids']:checked").each(function (index) {
+				ids[index] = $(this).val();
+			});
+
+			if (ids.length == 0){
+				alertify.alert("请选择需要添加的权限！");
+				return false;
+			}else {
+				alertify.confirm("是否确认添加对应权限?",
+						function(){
+							$.ajax({
+								url : "${pageContext.request.contextPath}/role/addPerByRid",
+								type:"post",
+								traditional: true,
+								dataType : "json",
+								data : {
+									"ids" : ids,
+									"rid": rid
+								},
+								success: function () {
+									alertify.alert("添加成功！");
+									return false;
+								}
+							})
+						},
+						function () {
+							alertify.error('取消');
+						}
+				);
+			}
+		}
+
+		$(function() {
 			// 选择框
 			$(".select2").select2();
 

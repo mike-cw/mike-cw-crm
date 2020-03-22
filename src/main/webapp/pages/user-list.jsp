@@ -146,19 +146,19 @@
 								</thead>
 								<tbody id="tbody">
 
-										<tr>
-											<td><input name="ids" type="checkbox"></td>
-											<td>1</td>
-											<td>陈豪</td>
-											<td>chenhao@qq.com</td>
-											<td>14567893451</td>
-											<td>未开启</td>											
-											<td class="text-center">
-												<a href="${pageContext.request.contextPath}/pages/user-show1.jsp" class="btn bg-olive btn-xs">详情</a>
-												<a href="${pageContext.request.contextPath}/pages/user-role-add.jsp" class="btn bg-olive btn-xs">添加角色</a>
-											</td>
-										</tr>
-									
+<%--										<tr>--%>
+<%--											<td><input name="ids" type="checkbox"></td>--%>
+<%--											<td>1</td>--%>
+<%--											<td>陈豪</td>--%>
+<%--											<td>chenhao@qq.com</td>--%>
+<%--											<td>14567893451</td>--%>
+<%--											<td>未开启</td>											--%>
+<%--											<td class="text-center">--%>
+<%--												<a href="${pageContext.request.contextPath}/pages/user-show1.jsp" class="btn bg-olive btn-xs">详情</a>--%>
+<%--												<a href="${pageContext.request.contextPath}/pages/user-role-add.jsp" class="btn bg-olive btn-xs">添加角色</a>--%>
+<%--											</td>--%>
+<%--										</tr>--%>
+<%--									--%>
 								</tbody>
 								<!--
                             <tfoot>
@@ -296,7 +296,7 @@
 
 			function pagination(pageNum,pageSize) {
 				$.get(
-						"${pageContext.request.contextPath}/queryAllUser",
+						"${pageContext.request.contextPath}/user/queryAllUser",
 						{"pageNum":pageNum,
 						"pageSize":pageSize},
 						function (data) {
@@ -305,7 +305,7 @@
 							$.each(data.list,function(index,user){
 								var $tr = $("<tr></tr>");
 								var $td0 = $("<td><input name='ids' value='"+user.id+"' type='checkbox'/></td>")
-								var $td1 = $("<td>"+user.id+"</td>");
+								var $td1 = $("<td>"+((index+1)+(pageNum-1)*pageSize)+"</td>");
 								var $td2 = $("<td>"+user.username+"</td>");
 								var $td3 = $("<td>"+user.email+"</td>");
 								var $td4 = $("<td>"+user.phoneNum+"</td>");
@@ -316,8 +316,8 @@
 									$td8 = $("<td  class='text-center'>未开启</td>");
 								}
 								var $td9 = $("<td class='text-center'></td>");
-								var $a1 = $("<a href='${pageContext.request.contextPath}/pages/user-show1.jsp' class='btn bg-olive btn-xs'>详情</a>");
-								var $a2 = $("<a href=\"${pageContext.request.contextPath}/pages/user-role-add.jsp\" class=\"btn bg-olive btn-xs\">添加角色</a>");
+								var $a1 = $("<a href=javascript:showUser('"+user.id+"') class='btn bg-olive btn-xs'>详情</a>");
+								var $a2 = $("<a href=javascript:addRole('"+user.id+"') class=\"btn bg-olive btn-xs\">添加角色</a>");
 								$td9.append($a1).append($a2);
 								$tr.append($td0).append($td1).append($td2).append($td3).append($td4).append($td8).append($td9);
 								$tbody.append($tr)
@@ -342,6 +342,13 @@
 							}
 						}
 				)
+			}
+
+			function showUser(uid) {
+				window.location = "${pageContext.request.contextPath}/user/showUserById/" + uid;
+			}
+			function addRole(uid) {
+				window.location = "${pageContext.request.contextPath}/user/addRole/" + uid;
 			}
 
 			function initPagination(total,pageSize) {

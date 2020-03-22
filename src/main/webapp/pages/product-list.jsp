@@ -149,8 +149,9 @@
 							</div>
 							<div class="box-tools pull-right">
 								<div class="has-feedback">
-									<input type="text" class="form-control input-sm"
-										placeholder="搜索"> <span
+									<input type="text" id="term" class="form-control input-sm"
+										   placeholder="搜索">
+									<button type="button" onclick="find()">搜索</button><span
 										class="glyphicon glyphicon-search form-control-feedback"></span>
 								</div>
 							</div>
@@ -188,11 +189,11 @@
 								</div>
 							</div>
 							<div class="box-tools pull-right">
-								<div class="has-feedback">
-									<input type="text" class="form-control input-sm"
-										placeholder="搜索"> <span
-										class="glyphicon glyphicon-search form-control-feedback"></span>
-								</div>
+<%--								<div class="has-feedback">--%>
+<%--									<input type="text" id="term" class="form-control input-sm"--%>
+<%--										placeholder="搜索">--%>
+<%--									<button type="button" onclick="find()">搜索</button>--%>
+<%--								</div>--%>
 							</div>
 							<!--工具栏/-->
 
@@ -370,14 +371,14 @@
 
 		function pagination(pageNo,pageSize) {
 			$.get(
-					"${pageContext.request.contextPath}/queryAllPro/"+pageNo+"/"+pageSize,
+					"${pageContext.request.contextPath}/product/queryAllPro/"+pageNo+"/"+pageSize,
 					function (data) {
 						var $tbody = $("#product");
 						$tbody.empty();
 						$.each(data.list,function(index,pros){
 							var $tr = $("<tr></tr>");
 							var $td0 = $("<td><input name='ids' value='"+pros.id+"' type='checkbox'/></td>")
-							var $td1 = $("<td>"+pros.id+"</td>");
+							var $td1 = $("<td>"+((index+1)+(pageNo-1)*pageSize)+"</td>");
 							var $td2 = $("<td>"+pros.productNum+"</td>");
 							var $td3 = $("<td>"+pros.productName+"</td>");
 							var $td4 = $("<td>"+pros.cityName+"</td>");
@@ -392,9 +393,9 @@
 							}
 							var $td9 = $("<td class='text-center'></td>");
 							var $button1 = $("<button type=\"button\"  class='btn bg-olive btn-xs' onclick=showOrd('"+pros.id+"')>订单</button>");
-							var $button2 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">详情</button>");
-							var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
-							$td9.append($button1).append($button2).append($button3);
+							// var $button2 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">详情</button>");
+							// var $button3 = $("<button type=\"button\" class=\"btn bg-olive btn-xs\">编辑</button>");
+							$td9.append($button1);
 							$tr.append($td0).append($td1).append($td2).append($td3).append($td4).append($td5).append($td6).append($td7).append($td8).append($td9);
 							$tbody.append($tr)
 						});
@@ -463,13 +464,13 @@
 				ids[index]=$(this).val();
 			})
 			if(ids.length==0){
-				alert().alert("请选择要操作的选项！");
+				alertify.alert("请选择要操作的选项！");
 				return false;
 			}else{
 				alertify.confirm("是否确定更新?",
 						function(){
 							$.ajax({
-								url : "${pageContext.request.contextPath}/updateProStatus",
+								url : "${pageContext.request.contextPath}/product/updateProStatus",
 								type:"post",
 								traditional: true,
 								dataType : "json",
@@ -502,7 +503,7 @@
 				alertify.confirm("是否确定删除?",
 						function(){
 							$.ajax({
-								url : "${pageContext.request.contextPath}/delProById",
+								url : "${pageContext.request.contextPath}/product/delProduct",
 								type:"post",
 								traditional: true,
 								dataType : "json",
@@ -520,6 +521,14 @@
 						});
 			}
 		}
+
+		function find(){
+			var term = $("#term").val();
+			if (term != "" && term != null){
+				window.location.href = "${pageContext.request.contextPath}/product/findlike1/" + term;
+			}
+		}
+
 
 		$(function() {
 			// 选择框
